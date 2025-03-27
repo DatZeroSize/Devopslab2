@@ -8,6 +8,12 @@ pipeline {
             }
         }
 
+        stage('Stop IIS') {
+            steps {
+                bat 'iisreset /stop' 
+            }
+        }
+
         stage('Restore Dependencies') {
             steps {
                 bat 'dotnet restore'
@@ -28,13 +34,10 @@ pipeline {
 
         stage('Deploy to IIS') {
             steps {
-                // Dừng website trên IIS trước khi copy file
-                bat 'iisreset /stop'
+          
+                bat 'xcopy /E /Y D:\\C#\\Devops\\publish\\* D:\\C#\\Devops\\'
 
-                // Copy files sang thư mục IIS (wwwroot)
-                bat 'robocopy D:\\C#\\Devops\\publish C:\\inetpub\\wwwroot\\DevopsApp /E /PURGE'
-
-                // Khởi động lại IIS
+            
                 bat 'iisreset /start'
             }
         }
