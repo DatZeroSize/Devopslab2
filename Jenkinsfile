@@ -18,13 +18,8 @@ pipeline {
         }
         stage('Publish') {
             steps {
-                sh 'dotnet publish -c Release -o publish'
+                sh 'dotnet publish -c Release -o ./publish'
             }
-        }
-        stage('Publish') {
-          steps {
-            sh 'dotnet publish -c Release -o ./publish'
-          }
         }
     }
 }
