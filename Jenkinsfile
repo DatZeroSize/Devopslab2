@@ -22,17 +22,20 @@ pipeline {
 
         stage('Publish') {
             steps {
-                bat 'dotnet publish -c Release -o D:\\C#\\Devops\\bin\\Release\\net8.0\\publish'
+                bat 'dotnet publish -c Release -o D:\\C#\\Devops\\publish'
             }
         }
 
         stage('Deploy to IIS') {
             steps {
-                // Copy files sang thư mục IIS
-                bat 'xcopy /E /Y D:\\C#\\Devops\\bin\\Release\\net8.0\\publish\\* D:\\C#\\Devops\\'
+                // Dừng website trên IIS trước khi copy file
+                bat 'iisreset /stop'
 
-                // Restart IIS để nhận code mới
-                bat 'iisreset'
+                // Copy files sang thư mục IIS (wwwroot)
+                bat 'robocopy D:\\C#\\Devops\\publish C:\\inetpub\\wwwroot\\DevopsApp /E /PURGE'
+
+                // Khởi động lại IIS
+                bat 'iisreset /start'
             }
         }
     }
